@@ -1,37 +1,28 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Linking, ScrollView, View } from "react-native";
-import { Header, Input, Text } from "react-native-elements";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ListItem, Avatar } from "react-native-elements";
-import Login from "./Login";
-import axios from "axios";
-import Aritcle from "../component/Aritcle";
-import { ActivityIndicator } from "react-native";
+import { ScrollView, View } from "react-native";
+import { Header, Input, SearchBar } from "react-native-elements";
+
 import styled from "styled-components/native";
 import { deleteToken, getToken } from "../utils";
 import axiosInstanceToken from "../axiosInstanceToken";
 import { AppContext } from "../context/AppProvider";
-
+import Department from "../component/Department";
 /* styled component */
-const ActivityIndicatorStyled = styled.ActivityIndicator`
-  margin-top: 50%;
-`;
+const ActivityIndicatorStyled = styled.ActivityIndicator``;
 
 const HomeScreen = ({ navigation }) => {
   const [article, setArticle] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isLogged, setIsLogged } = useContext(AppContext);
-  const [query, setQuery] = useState("");
+  const [queryDepartment, setQueryDepartment] = useState("");
 
-  const callArticle = async (res) => {
+  const getDepartment = async () => {
     let accessToken = await getToken("accessToken");
-    let data = { query: query };
     try {
       let promise = await axiosInstanceToken(
-        "POST",
-        `article/search`,
-        accessToken,
-        data
+        "GET",
+        `user/department`,
+        accessToken
       );
       return promise.data;
     } catch (e) {
@@ -42,21 +33,30 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     getToken("accessToken").then((res) => {
       if (res == null) {
-        navigation.navigate("LoginBase", { isSuccess: false });
+        navigation.navigate("LoginBase", {
+          isSuccess: false,
+          withAnimation: true,
+        });
       } else {
-        callArticle(res).then((data) => {
+        getDepartment(res).then((data) => {
           setArticle(data);
           setIsLoading(false);
         });
       }
     });
     return;
-  }, [isLogged, query]);
-
+  }, [isLogged, queryDepartment]);
+  const fSearch = (data) => {
+    return data?.filter(
+      (item) =>
+        item.name.toLowerCase().indexOf(queryDepartment.toLocaleLowerCase()) >
+          -1 ||
+        item.id.toLowerCase().indexOf(queryDepartment.toLocaleLowerCase()) > -1
+    );
+  };
   return (
-    <View>
+    <View style={{ backgroundColor: "white", height: "100%" }}>
       <Header
-        placement="left"
         rightComponent={{
           icon: "logout",
           color: "#fff",
@@ -64,25 +64,36 @@ const HomeScreen = ({ navigation }) => {
             await deleteToken("accessToken");
             await deleteToken("refreshToken");
             setIsLogged(false);
+            navigation.navigate("LoginBase", { withAnimation: true });
           },
         }}
-        centerComponent={{ text: "Hello", style: { color: "#fff" } }}
+        centerComponent={{
+          text: "Departments",
+          style: { color: "#fff", fontSize: 20 },
+        }}
         leftComponent={{ icon: "home", color: "#fff" }}
       />
 
       <View>
-        <Input
-          placeholder="Tìm nội dung"
+        <SearchBar
+          round="true"
+          style={{ borderBottomWidth: 1, borderColor: "#ccc" }}
+          platform="android"
+          showLoading="true"
+          placeholder="Search..."
           onChangeText={(value) => {
-            setQuery(value);
+            setQueryDepartment(value);
           }}
-        ></Input>
+          value={queryDepartment}
+        />
       </View>
-      {isLoading ? (
-        <ActivityIndicatorStyled size="large" color="#2089dc" />
-      ) : (
-        <Aritcle article={article} />
-      )}
+      <ScrollView>
+        {isLoading ? (
+          <ActivityIndicatorStyled size="large" color="#2089dc" />
+        ) : (
+          <Department department={fSearch(article)} navigation={navigation} />
+        )}
+      </ScrollView>
     </View>
   );
 };
