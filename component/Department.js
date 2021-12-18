@@ -1,6 +1,6 @@
 import React from "react";
-import { ScrollView, Text, TouchableOpacity } from "react-native";
-import { ListItem, Avatar, Icon, Badge } from "react-native-elements";
+import { ScrollView, Text } from "react-native";
+import { ListItem, Icon } from "react-native-elements";
 export default function Department({ navigation, department }) {
   const renderListDepartment = () => {
     return department?.map((item, i) => {
@@ -19,8 +19,22 @@ export default function Department({ navigation, department }) {
             </ListItem.Title>
             <ListItem.Subtitle>{item.id}</ListItem.Subtitle>
           </ListItem.Content>
-          <Text>({item.count})</Text>
-          <Icon size={15} name="users" type="feather" />
+          <Text>({item.male})</Text>
+          <Icon
+            size={17}
+            name="male-symbol"
+            type="foundation"
+            color="#5584AC"
+          />
+          <Text>({item.female})</Text>
+          <Icon
+            size={17}
+            name="female-symbol"
+            type="foundation"
+            color="#F2789F"
+          />
+          {/* <Text>({item.count})</Text>
+          <Icon size={15} name="users" type="feather" /> */}
         </ListItem>
       );
     });

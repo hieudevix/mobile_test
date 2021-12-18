@@ -17,6 +17,7 @@ import axiosInstanceToken from "../axiosInstanceToken";
 import { AppContext } from "../context/AppProvider";
 import { deleteToken, getToken } from "../utils";
 import moment from "moment";
+import { StyleSheet } from "react-native";
 
 export default function UserInfo({ navigation, route }) {
   const { isLogged, setIsLogged } = useContext(AppContext);
@@ -65,8 +66,17 @@ export default function UserInfo({ navigation, route }) {
           <ListItem.Content>
             <ListItem.Title>{item.name}</ListItem.Title>
             <ListItem.Subtitle>{item.id}</ListItem.Subtitle>
+            <ListItem.Subtitle>{item.age}</ListItem.Subtitle>
           </ListItem.Content>
           {item.pwd != null ? (
+            <View>
+              <Text style={{ fontSize: 10, fontWeight: "700" }}>ERP</Text>
+            </View>
+          ) : (
+            <Text></Text>
+          )}
+
+          {item.status > 0 ? (
             <Icon
               size={18}
               name="checkcircleo"
@@ -74,8 +84,14 @@ export default function UserInfo({ navigation, route }) {
               color="#116530"
             />
           ) : (
-            <Text></Text>
+            <Icon
+              size={18}
+              name="closecircleo"
+              type="ant-design"
+              color="#d4380d"
+            />
           )}
+
           <ListItem.Chevron />
         </ListItem>
       );

@@ -11,7 +11,7 @@ import Department from "../component/Department";
 const ActivityIndicatorStyled = styled.ActivityIndicator``;
 
 const HomeScreen = ({ navigation }) => {
-  const [article, setArticle] = useState([]);
+  const [department, setDepartment] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [queryDepartment, setQueryDepartment] = useState("");
@@ -39,12 +39,11 @@ const HomeScreen = ({ navigation }) => {
         });
       } else {
         getDepartment(res).then((data) => {
-          setArticle(data);
+          setDepartment(data);
           setIsLoading(false);
         });
       }
     });
-    return;
   }, [isLogged, queryDepartment]);
   const fSearch = (data) => {
     return data?.filter(
@@ -91,7 +90,10 @@ const HomeScreen = ({ navigation }) => {
         {isLoading ? (
           <ActivityIndicatorStyled size="large" color="#2089dc" />
         ) : (
-          <Department department={fSearch(article)} navigation={navigation} />
+          <Department
+            department={fSearch(department)}
+            navigation={navigation}
+          />
         )}
       </ScrollView>
     </View>

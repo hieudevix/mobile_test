@@ -42,16 +42,12 @@ export default function LoginNativeBase({ navigation }) {
   const validation = () => {
     let valid = true;
     if (user.username == "") {
-      console.log("userne", user.username);
       setErr({ ...err, username: "Username is required!" });
-      console.log("err user", err);
       valid = false;
     }
 
     if (user.password == "") {
-      console.log("passne", user.password);
       setErr({ ...err, password: "Password is required!" });
-      console.log("err password", err);
       valid = false;
     }
 
@@ -63,11 +59,6 @@ export default function LoginNativeBase({ navigation }) {
     if (valid) {
       try {
         let result = await axiosInstance.post("user/login", user);
-        // let result = await axios({
-        //   url: "http://192.168.18.172:5000/user/login",
-        //   method: "POST",
-        //   data: user,
-        // });
         if (result.data.authenticated == false) {
           setErr(result.data.message);
         } else {
@@ -173,7 +164,7 @@ export default function LoginNativeBase({ navigation }) {
             <Button mt="2" colorScheme="info" onPress={() => loginHandle()}>
               Sign in
             </Button>
-            <HStack mt="6" justifyContent="center">
+            {/* <HStack mt="6" justifyContent="center">
               <Text
                 fontSize="sm"
                 color="coolGray.600"
@@ -193,7 +184,7 @@ export default function LoginNativeBase({ navigation }) {
               >
                 Sign Up
               </Link>
-            </HStack>
+            </HStack> */}
           </VStack>
         </Box>
         <Alert title={""} content={""} />

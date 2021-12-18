@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Image, StyleSheet, View } from "react-native";
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 import { deleteToken, getToken } from "../utils";
 import axiosInstanceToken from "../axiosInstanceToken";
 import { Badge, Header } from "react-native-elements";
 import { AppContext } from "../context/AppProvider";
 import moment from "moment";
 import { ActivityIndicator } from "react-native";
-import { encode as btoa } from "base-64";
 import { Text } from "react-native";
 import { Buffer } from "buffer";
 export default function UserInfoDetail({ route, navigation }) {
@@ -35,18 +34,19 @@ export default function UserInfoDetail({ route, navigation }) {
       setIsLoading(!isLoading);
     });
   }, [personId]);
-
-  const arrayBufferToBase64 = (buffer) => {
-    let binary = "";
-    let bytes = new Uint8Array(buffer);
-    let len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  };
   const renderInfoUser = (userInfo) => {
     let base64data = new Buffer(userInfo.image).toString("base64");
+    // console.log({ base64data });
+    // if (
+    //   userInfo.image != "" ||
+    //   userInfo.image != null ||
+    //   userInfo.image != undefined
+    // ) {
+    //   base64data = "";
+    // } else {
+    //   base64data = new Buffer(userInfo.image).toString("base64");
+    // }
+
     if (userInfo.id == "29975" || userInfo.id == "30730") {
       base64data = "";
     }
@@ -116,7 +116,7 @@ export default function UserInfoDetail({ route, navigation }) {
           color="#2089dc"
         />
       ) : (
-        renderInfoUser(userInfo[0])
+        <ScrollView>{renderInfoUser(userInfo[0])}</ScrollView>
       )}
     </View>
   );
