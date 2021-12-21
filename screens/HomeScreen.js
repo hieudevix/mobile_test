@@ -7,15 +7,17 @@ import { deleteToken, getToken } from "../utils";
 import axiosInstanceToken from "../axiosInstanceToken";
 import { AppContext } from "../context/AppProvider";
 import Department from "../component/Department";
+import ListUser from "../component/ListUser";
 /* styled component */
 const ActivityIndicatorStyled = styled.ActivityIndicator``;
 
 const HomeScreen = ({ navigation }) => {
   const [department, setDepartment] = useState([]);
+  const [listUsers, setListUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isLogged, setIsLogged } = useContext(AppContext);
-  const [queryDepartment, setQueryDepartment] = useState("");
-
+  const [query, setQuery] = useState("");
+  const [typeQuery, setTypeQuery] = useState("department");
   const getDepartment = async () => {
     let accessToken = await getToken("accessToken");
     try {
@@ -29,7 +31,42 @@ const HomeScreen = ({ navigation }) => {
       console.log(e);
     }
   };
+  const getUsers = async (userid) => {
+    let accessToken = await getToken("accessToken");
+    try {
+      let promise = await axiosInstanceToken(
+        "GET",
+        `user/search/${userid}`,
+        accessToken
+      );
+      return promise.data;
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  // console.log(parseInt(query.length));
+  // console.log({ department });
+  // console.log({ listUsers });
 
+  useEffect(() => {
+    if (
+      parseInt(query.length) > 2 &&
+      Number.isInteger(parseInt(query)) == true
+    ) {
+      setIsLoading(true);
+      setTypeQuery("userid");
+      getUsers(query).then((data) => {
+        setListUsers(data);
+        setIsLoading(false);
+      });
+    } else {
+      setTypeQuery("department");
+      // getDepartment().then((data) => {
+      //   setDepartment(data);
+      //   setIsLoading(false);
+      // });
+    }
+  }, [query]);
   useEffect(() => {
     getToken("accessToken").then((res) => {
       if (res == null) {
@@ -44,13 +81,12 @@ const HomeScreen = ({ navigation }) => {
         });
       }
     });
-  }, [isLogged, queryDepartment]);
+  }, [isLogged]);
   const fSearch = (data) => {
     return data?.filter(
       (item) =>
-        item.name.toLowerCase().indexOf(queryDepartment.toLocaleLowerCase()) >
-          -1 ||
-        item.id.toLowerCase().indexOf(queryDepartment.toLocaleLowerCase()) > -1
+        item.name.toLowerCase().indexOf(query.toLocaleLowerCase()) > -1 ||
+        item.id.toLowerCase().indexOf(query.toLocaleLowerCase()) > -1
     );
   };
   return (
@@ -81,18 +117,24 @@ const HomeScreen = ({ navigation }) => {
           showLoading="true"
           placeholder="Search..."
           onChangeText={(value) => {
-            setQueryDepartment(value);
+            setQuery(value);
           }}
-          value={queryDepartment}
+          value={query}
         />
       </View>
       <ScrollView>
         {isLoading ? (
           <ActivityIndicatorStyled size="large" color="#2089dc" />
-        ) : (
+        ) : typeQuery == "department" ? (
           <Department
             department={fSearch(department)}
             navigation={navigation}
+          />
+        ) : (
+          <ListUser
+            listUsers={listUsers}
+            navigation={navigation}
+            showDepartmentName="true"
           />
         )}
       </ScrollView>

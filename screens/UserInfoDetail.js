@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import { Image, ScrollView, StyleSheet, View } from "react-native";
-import { deleteToken, getToken } from "../utils";
+import { Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
+import { getToken } from "../utils";
 import axiosInstanceToken from "../axiosInstanceToken";
-import { Badge, Header } from "react-native-elements";
 import { AppContext } from "../context/AppProvider";
 import moment from "moment";
 import { ActivityIndicator } from "react-native";
 import { Text } from "react-native";
 import { Buffer } from "buffer";
+import ImageZoom from "react-native-image-pan-zoom";
 export default function UserInfoDetail({ route, navigation }) {
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [userInfo, setUserInfo] = useState({});
@@ -36,28 +36,34 @@ export default function UserInfoDetail({ route, navigation }) {
   }, [personId]);
   const renderInfoUser = (userInfo) => {
     let base64data = new Buffer(userInfo.image).toString("base64");
-    // console.log({ base64data });
-    // if (
-    //   userInfo.image != "" ||
-    //   userInfo.image != null ||
-    //   userInfo.image != undefined
-    // ) {
-    //   base64data = "";
-    // } else {
-    //   base64data = new Buffer(userInfo.image).toString("base64");
-    // }
-
-    if (userInfo.id == "29975" || userInfo.id == "30730") {
+    if (
+      userInfo.id == "29975" ||
+      userInfo.id == "30730" ||
+      userInfo.id == "26091"
+    ) {
       base64data = "";
     }
+
     return (
       <View style={styles.wrapperCard}>
         <View style={styles.card}>
           <View style={styles.imgCard}>
-            <Image
+            {/* <Image
               style={styles.img}
               source={{ uri: `data:image/jpeg;base64,${base64data}` }}
-            />
+            /> */}
+            <ImageZoom
+              cropWidth={"100%"}
+              cropHeight={450}
+              imageWidth={Dimensions.get("window").width}
+              imageHeight={450}
+            >
+              <Image
+                style={styles.img}
+                source={{ uri: `data:image/jpeg;base64,${base64data}` }}
+              />
+            </ImageZoom>
+
             <Text style={styles.badge}>{userInfo?.pos}</Text>
           </View>
           <View style={styles.info}>
@@ -66,15 +72,6 @@ export default function UserInfoDetail({ route, navigation }) {
               <Text style={styles.titleId}>{userInfo?.id}</Text>
             </View>
             <View style={styles.content}>
-              {userInfo?.pwd != null ? (
-                <View style={styles.row}>
-                  <Text style={styles.infoTitle}>Password ERP: </Text>
-                  <Text style={styles.infoContent}>{userInfo?.pwd}</Text>
-                </View>
-              ) : (
-                <Text style={{ display: "none" }}></Text>
-              )}
-
               <View style={styles.row}>
                 <Text style={styles.infoTitle}>Gender: </Text>
                 <Text style={styles.infoContent}>

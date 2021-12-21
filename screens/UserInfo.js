@@ -1,23 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-} from "react-native";
+import { ActivityIndicator, ScrollView, Text } from "react-native";
 import { View } from "react-native";
-import {
-  Header,
-  Icon,
-  Input,
-  ListItem,
-  SearchBar,
-} from "react-native-elements";
+import { Icon, SearchBar } from "react-native-elements";
 import axiosInstanceToken from "../axiosInstanceToken";
+import ListUser from "../component/ListUser";
 import { AppContext } from "../context/AppProvider";
-import { deleteToken, getToken } from "../utils";
-import moment from "moment";
-import { StyleSheet } from "react-native";
+import { getToken } from "../utils";
 
 export default function UserInfo({ navigation, route }) {
   const { isLogged, setIsLogged } = useContext(AppContext);
@@ -44,59 +32,6 @@ export default function UserInfo({ navigation, route }) {
     });
   }, [route.params.key]);
 
-  const renderListUsers = (listUser) => {
-    return listUser?.map((item, i) => {
-      return (
-        <ListItem
-          key={i}
-          bottomDivider
-          onPress={() =>
-            navigation.navigate("UserInfoDetail", {
-              id: item.id,
-              withAnimation: true,
-            })
-          }
-        >
-          {item.gender == "1" ? (
-            <Icon name="male" type="fontisto" color="#5584AC" />
-          ) : (
-            <Icon name="female" type="fontisto" color="#F2789F" />
-          )}
-
-          <ListItem.Content>
-            <ListItem.Title>{item.name}</ListItem.Title>
-            <ListItem.Subtitle>{item.id}</ListItem.Subtitle>
-            <ListItem.Subtitle>{item.age}</ListItem.Subtitle>
-          </ListItem.Content>
-          {item.pwd != null ? (
-            <View>
-              <Text style={{ fontSize: 10, fontWeight: "700" }}>ERP</Text>
-            </View>
-          ) : (
-            <Text></Text>
-          )}
-
-          {item.status > 0 ? (
-            <Icon
-              size={18}
-              name="checkcircleo"
-              type="ant-design"
-              color="#116530"
-            />
-          ) : (
-            <Icon
-              size={18}
-              name="closecircleo"
-              type="ant-design"
-              color="#d4380d"
-            />
-          )}
-
-          <ListItem.Chevron />
-        </ListItem>
-      );
-    });
-  };
   const fSearch = (data) => {
     return data?.filter(
       (item) =>
@@ -107,24 +42,6 @@ export default function UserInfo({ navigation, route }) {
 
   return (
     <View style={{ backgroundColor: "white", height: "100%" }}>
-      {/* <Header
-        centerComponent={{
-          text: route.params.name,
-          style: { color: "#fff", fontSize: 20 },
-        }}
-        rightComponent={{
-          icon: "logout",
-          color: "#fff",
-          onPress: async () => {
-            await deleteToken("accessToken");
-            await deleteToken("refreshToken");
-            setIsLogged(false);
-            navigation.navigate("LoginBase", { withAnimation: true });
-          },
-        }}
-        leftComponent={{ icon: "home", color: "#fff" }}
-      /> */}
-
       <SearchBar
         style={{ borderBottomWidth: 1, borderColor: "#ccc" }}
         platform="android"
@@ -146,7 +63,7 @@ export default function UserInfo({ navigation, route }) {
             </View>
           )
         ) : (
-          renderListUsers(fSearch(listUser))
+          <ListUser listUsers={fSearch(listUser)} navigation={navigation} />
         )}
       </ScrollView>
     </View>

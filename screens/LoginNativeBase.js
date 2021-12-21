@@ -55,7 +55,6 @@ export default function LoginNativeBase({ navigation }) {
   };
   const loginHandle = async () => {
     let valid = validation();
-    console.log({ valid });
     if (valid) {
       try {
         let result = await axiosInstance.post("user/login", user);
