@@ -24,9 +24,9 @@ export default function ListUser({
           }
         >
           {item?.gender == "1" ? (
-            <Icon name="male" type="fontisto" color="#5584AC" />
+            <Icon size={36} name="male" type="fontisto" color="#5584AC" />
           ) : (
-            <Icon name="female" type="fontisto" color="#F2789F" />
+            <Icon size={36} name="female" type="fontisto" color="#F2789F" />
           )}
 
           <ListItem.Content>
@@ -49,6 +49,23 @@ export default function ListUser({
               <Text style={{ fontWeight: "700" }}>Age: </Text>
               <Text>{item?.age}</Text>
             </ListItem.Subtitle>
+            {item?.ip != null ? (
+              <ListItem.Subtitle>
+                <Text style={{ fontWeight: "700" }}>IP: </Text>
+                <Text>{item?.ip}</Text>
+              </ListItem.Subtitle>
+            ) : (
+              <></>
+            )}
+
+            {item?.email != null ? (
+              <ListItem.Subtitle>
+                <Text style={{ fontWeight: "700" }}>Email: </Text>
+                <Text>{item?.email}</Text>
+              </ListItem.Subtitle>
+            ) : (
+              <></>
+            )}
           </ListItem.Content>
           {item?.pwd != null ? (
             <View>
