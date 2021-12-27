@@ -24,9 +24,9 @@ export default function ListUser({
           }
         >
           {item?.gender == "1" ? (
-            <Icon name="male" type="fontisto" color="#5584AC" />
+            <Icon size={36} name="male" type="fontisto" color="#5584AC" />
           ) : (
-            <Icon name="female" type="fontisto" color="#F2789F" />
+            <Icon size={36} name="female" type="fontisto" color="#F2789F" />
           )}
 
           <ListItem.Content>
