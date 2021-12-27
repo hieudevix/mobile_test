@@ -57,7 +57,6 @@ export default function ListUser({
             ) : (
               <></>
             )}
-            {/* <ListItem.Subtitle>HẢO HẢO</ListItem.Subtitle> */}
           </ListItem.Content>
           {item?.pwd != null ? (
             <View>
