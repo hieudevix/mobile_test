@@ -12,6 +12,7 @@ import UserInfo from "./screens/UserInfo";
 import UserInfoDetail from "./screens/UserInfoDetail";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import { deleteToken } from "./utils";
+import Test from "./screens/Test";
 
 const Stack = createNativeStackNavigator();
 /**
@@ -35,6 +36,14 @@ export default function App() {
       <AppProvider>
         <NavigationContainer>
           <Stack.Navigator>
+            {/* <Stack.Screen
+              name="Test"
+              component={Test}
+              options={({ route: { params } }) => ({
+                headerLeft: null,
+                headerShown: false,
+              })}
+            /> */}
             <Stack.Screen
               name="Home"
               component={HomeScreen}

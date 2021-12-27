@@ -163,7 +163,7 @@ export default function LoginNativeBase({ navigation }) {
             <Button mt="2" colorScheme="info" onPress={() => loginHandle()}>
               Sign in
             </Button>
-            {/* <HStack mt="6" justifyContent="center">
+            <HStack mt="6" justifyContent="center">
               <Text
                 fontSize="sm"
                 color="coolGray.600"
@@ -183,7 +183,7 @@ export default function LoginNativeBase({ navigation }) {
               >
                 Sign Up
               </Link>
-            </HStack> */}
+            </HStack>
           </VStack>
         </Box>
         <Alert title={""} content={""} />

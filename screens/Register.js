@@ -70,6 +70,7 @@ export default function Register({ navigation }) {
 
   /** login function */
   const handleRegister = async () => {
+    alert('test');
     try {
       let result = await axiosInstance.post("user/register", user);
       if (result.data.status == true) {
@@ -116,6 +117,13 @@ export default function Register({ navigation }) {
             >
               Welcome
             </Heading>
+            <Button
+                mt="2"
+                colorScheme="info"
+                onPress={() => handleRegister()}
+              >
+                Sign up
+              </Button>
             <Heading
               mt="1"
               color="coolGray.600"
@@ -169,6 +177,7 @@ export default function Register({ navigation }) {
               >
                 Sign up
               </Button>
+             
               {/* <Toast user={user} /> */}
             </VStack>
             <HStack mt="6" justifyContent="center">
