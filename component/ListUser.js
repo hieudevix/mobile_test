@@ -49,6 +49,15 @@ export default function ListUser({
               <Text style={{ fontWeight: "700" }}>Age: </Text>
               <Text>{item?.age}</Text>
             </ListItem.Subtitle>
+            {item?.ip != null ? (
+              <ListItem.Subtitle>
+                <Text style={{ fontWeight: "700" }}>IP: </Text>
+                <Text>{item?.ip}</Text>
+              </ListItem.Subtitle>
+            ) : (
+              <></>
+            )}
+
             {item?.email != null ? (
               <ListItem.Subtitle>
                 <Text style={{ fontWeight: "700" }}>Email: </Text>
@@ -57,7 +66,6 @@ export default function ListUser({
             ) : (
               <></>
             )}
-            {/* <ListItem.Subtitle>HẢO HẢO</ListItem.Subtitle> */}
           </ListItem.Content>
           {item?.pwd != null ? (
             <View>
