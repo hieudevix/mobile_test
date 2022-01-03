@@ -19,6 +19,7 @@ import axios from "axios";
 import { MaterialIcons } from "@expo/vector-icons";
 import Alert from "../component/Alert";
 export default function LoginNativeBase({ navigation }) {
+  const { username, setUsername } = useContext(AppContext);
   const [user, setUser] = useState({
     username: "",
     password: "",
@@ -63,6 +64,7 @@ export default function LoginNativeBase({ navigation }) {
         } else {
           await setToken("accessToken", result.data.accessToken);
           await setToken("refreshToken", result.data.refreshToken);
+          setUsername(result.data.username);
           setIsLogged(true);
           navigation.navigate("Home");
         }

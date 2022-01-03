@@ -31,7 +31,7 @@ export default function ListUser({
 
           <ListItem.Content>
             <ListItem.Title>
-              {item?.name} {showDepartmentName ? `(${item.department})` : ""}
+              {item?.name} {showDepartmentName ? item.department_detail ? `( ${item.department}, ${item.department_detail} )` : `( ${item.department} )` : item.department_detail ? `( ${item.department_detail} )` : ''}
             </ListItem.Title>
             <ListItem.Subtitle>
               <Text style={{ fontWeight: "700" }}>ID: </Text>
@@ -45,27 +45,44 @@ export default function ListUser({
                 <></>
               )}
             </ListItem.Subtitle>
-            <ListItem.Subtitle>
-              <Text style={{ fontWeight: "700" }}>Age: </Text>
+            <ListItem.Subtitle >
+
+              <Text style={{ fontWeight: "700" }}>AGE: </Text>
               <Text>{item?.age}</Text>
+              <Text style={{ fontWeight: "700" }}>, POS: </Text>
+              <Text>{item?.pos}</Text>
+
             </ListItem.Subtitle>
+
+
+            {item?.email != null ? (
+              <ListItem.Subtitle>
+                <Text style={{ fontWeight: "700" }}>EMAIL: </Text>
+                <Text>{item?.email}</Text>
+                {item?.tax != null ? (
+                  <>
+                    <Text style={{ fontWeight: "700" }}>, PHONE: </Text>
+                    <Text>{item?.tax}</Text>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </ListItem.Subtitle>
+            ) : (
+              <></>
+            )}
             {item?.ip != null ? (
               <ListItem.Subtitle>
                 <Text style={{ fontWeight: "700" }}>IP: </Text>
                 <Text>{item?.ip}</Text>
+
               </ListItem.Subtitle>
             ) : (
               <></>
             )}
 
-            {item?.email != null ? (
-              <ListItem.Subtitle>
-                <Text style={{ fontWeight: "700" }}>Email: </Text>
-                <Text>{item?.email}</Text>
-              </ListItem.Subtitle>
-            ) : (
-              <></>
-            )}
+
+
           </ListItem.Content>
           {item?.pwd != null ? (
             <View>

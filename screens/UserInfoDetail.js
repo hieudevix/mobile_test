@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
-
-import { Dimensions, Image, ScrollView, StyleSheet, View } from "react-native";
+import * as Network from 'expo-network';
+import { Dimensions, Image, ScrollView, StyleSheet, View, Switch, TouchableOpacity } from "react-native";
 import { getToken } from "../utils";
 import axiosInstanceToken from "../axiosInstanceToken";
 import { AppContext } from "../context/AppProvider";
@@ -9,12 +9,22 @@ import { ActivityIndicator } from "react-native";
 import { Text } from "react-native";
 import { Buffer } from "buffer";
 import ImageZoom from "react-native-image-pan-zoom";
+import { Icon } from "react-native-elements";
+
 export default function UserInfoDetail({ route, navigation }) {
   const { isLogged, setIsLogged } = useContext(AppContext);
+  const { username } = useContext(AppContext);
   const [userInfo, setUserInfo] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const personId = route.params.id;
+  const [isEnabled, setIsEnabled] = useState(false);
+  const [degree, setDegree] = useState(0);
+  const [ip, setIP] = useState("");
+  Network.getIpAddressAsync().then(res => {
+    setIP(res);
+  });
 
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const getUserInfo = async (personId) => {
     let accessToken = await getToken("accessToken");
     try {
@@ -36,36 +46,75 @@ export default function UserInfoDetail({ route, navigation }) {
   }, [personId]);
   const renderInfoUser = (userInfo) => {
     let base64data = new Buffer(userInfo.image).toString("base64");
+    let checkImg = false;
     if (
       userInfo.id == "29975" ||
       userInfo.id == "30730" ||
-      userInfo.id == "26091"
+      userInfo.id == "26091" ||
+      userInfo.id == "27189"
     ) {
       base64data = "";
+      checkImg = true;
     }
 
     return (
       <View style={styles.wrapperCard}>
         <View style={styles.card}>
           <View style={styles.imgCard}>
-            {/* <Image
-              style={styles.img}
-              source={{ uri: `data:image/jpeg;base64,${base64data}` }}
-            /> */}
-            <ImageZoom
+
+            {checkImg ? <Image
+              style={[styles.img, { transform: `rotate(${degree}deg)` }]}
+              source={require('../assets/fun.gif')}
+            /> : username == "nghia" || username == 'nam' ? <Image
+              style={[styles.img, { transform: `rotate(${degree}deg)` }]}
+              source={require('../assets/fun.gif')}
+            /> : <ImageZoom
               cropWidth={"100%"}
               cropHeight={450}
               imageWidth={Dimensions.get("window").width}
               imageHeight={450}
             >
               <Image
-                style={styles.img}
+                style={[styles.img, { transform: `rotate(${degree}deg)` }]}
                 source={{ uri: `data:image/jpeg;base64,${base64data}` }}
               />
-            </ImageZoom>
+            </ImageZoom>}
+
+
 
             <Text style={styles.badge}>{userInfo?.pos}</Text>
+            <View style={{ flexDirection: 'row', marginTop: 10 }}>
+
+              <TouchableOpacity onPress={() => {
+                // if (degree == -360) {
+                //   setDegree(degree + 90)
+                // } else {
+                setDegree(degree - 90)
+                // }
+              }}> <Icon
+                  name='caretleft'
+                  type="ant-design"
+                  color='#2089dc' /></TouchableOpacity>
+              <TouchableOpacity onPress={() => {
+                // if (degree == 360) {
+                //   setDegree(degree - 90)
+                // } else {
+                setDegree(degree + 90)
+                // }
+              }}> <Icon
+                  name='caretright'
+                  type="ant-design"
+                  color='#2089dc' /></TouchableOpacity>
+            </View>
           </View>
+          {/* <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={toggleSwitch}
+            value={isEnabled}
+          /> */}
+
           <View style={styles.info}>
             <View style={styles.title}>
               <Text style={styles.titleName}>{userInfo?.name}</Text>
@@ -142,6 +191,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 400,
     borderRadius: 7,
+
   },
   badge: {
     position: "absolute",

@@ -10,6 +10,7 @@ import LoginNativeBase from "./screens/LoginNativeBase";
 import Register from "./screens/Register";
 import UserInfo from "./screens/UserInfo";
 import UserInfoDetail from "./screens/UserInfoDetail";
+
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import { deleteToken } from "./utils";
 import Test from "./screens/Test";
@@ -38,7 +39,7 @@ export default function App() {
           <Stack.Navigator>
             {/* <Stack.Screen
               name="Test"
-              component={Test}
+              component={QRCode}
               options={({ route: { params } }) => ({
                 headerLeft: null,
                 headerShown: false,
