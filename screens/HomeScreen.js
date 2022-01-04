@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, Switch, View } from "react-native";
 import { BottomSheet, Header, Input, SearchBar } from "react-native-elements";
 
 import styled from "styled-components/native";
@@ -29,6 +29,8 @@ const HomeScreen = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(false);
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [query, setQuery] = useState("");
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [typeQuery, setTypeQuery] = useState("department");
   const getDepartment = async () => {
     let accessToken = await getToken("accessToken");
@@ -162,11 +164,16 @@ const HomeScreen = ({ navigation }) => {
                 Albums
               </Text>
             </Box>
-            <Actionsheet.Item>Delete</Actionsheet.Item>
-            <Actionsheet.Item>Share</Actionsheet.Item>
-            <Actionsheet.Item>Play</Actionsheet.Item>
-            <Actionsheet.Item>Favourite</Actionsheet.Item>
-            <Actionsheet.Item>Cancel</Actionsheet.Item>
+            <Box w="100%" h={60} px={4} justifyContent="center">
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
+              />
+            </Box>
+
           </Actionsheet.Content>
         </Actionsheet>
       </View>
