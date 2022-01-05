@@ -3,6 +3,7 @@ import { ScrollView, Text } from "react-native";
 import { ListItem, Icon } from "react-native-elements";
 export default function Department({ navigation, department }) {
   const renderListDepartment = () => {
+
     return department?.map((item, i) => {
       return (
         <ListItem

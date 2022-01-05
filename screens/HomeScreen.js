@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { ScrollView, View,Switch } from "react-native";
+import { ScrollView, View, Switch } from "react-native";
 import { BottomSheet, Header, Input, SearchBar } from "react-native-elements";
 
 import styled from "styled-components/native";
@@ -27,16 +27,20 @@ const HomeScreen = ({ navigation }) => {
   // const [listUsers, setListUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclose();
-  const [start,setstart] = useState(0);
+  const [start, setstart] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [query, setQuery] = useState("");
   const [typeQuery, setTypeQuery] = useState("department");
   const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => {setIsEnabled(previousState => !previousState);
-    if(isEnabled){
+  const [addrow, setaddrow] = useState([]);
+  const [endget, setendget] = useState(10);
+
+  const toggleSwitch = () => {
+    setIsEnabled(previousState => !previousState);
+    if (isEnabled) {
       setTypeQuery("department");
-    }else{
+    } else {
       setTypeQuery("nameus");
     }
 
@@ -67,12 +71,12 @@ const HomeScreen = ({ navigation }) => {
       console.log(e);
     }
   };
-  const getUsersByName = async (name,start) => {
+  const getUsersByName = async (name) => {
     let accessToken = await getToken("accessToken");
     try {
       let promise = await axiosInstanceToken(
         "GET",
-        `user/searchName?name=${name}&start=${start}&rows=10`,
+        `user/searchName?name=${name}&start=0&rows=${endget}`,
         accessToken
       );
       return promise.data;
@@ -80,20 +84,20 @@ const HomeScreen = ({ navigation }) => {
       console.log(e);
     }
   };
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}) => {
-    const paddingToBottom = 20;
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 0;
     return layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom;
   };
   useEffect(() => {
-
-    if(typeQuery == 'nameus'){
+    setendget(10);
+    if (typeQuery == 'nameus') {
       setIsLoading(true);
-      getUsersByName(query,start).then((data) => {
+      getUsersByName(query).then((data) => {
         setListUsers(data);
         setIsLoading(false);
       });
-    }else if (
+    } else if (
       parseInt(query.length) > 2 &&
       Number.isInteger(parseInt(query)) == true
     ) {
@@ -130,29 +134,40 @@ const HomeScreen = ({ navigation }) => {
         item.id.toLowerCase().indexOf(query.toLocaleLowerCase()) > -1
     );
   };
-  const searchlimit=()=>{
-      if(isLoading){
-       return <ActivityIndicatorStyled size="large" color="#2089dc" />  
-      }else{
-        if(typeQuery == 'department'){
-          return <Department
+  const searchlimit = () => {
+    if (isLoading) {
+      return <ActivityIndicatorStyled size="large" color="#2089dc" />
+    } else {
+      if (typeQuery == 'department') {
+        return <Department
           department={fSearch(department)}
           navigation={navigation}
         />
-        }else if(typeQuery == 'userid'){
-         return <ListUser
+      } else if (typeQuery == 'userid') {
+        return <ListUser
           listUsers={listUsers}
           navigation={navigation}
           showDepartmentName="true"
         />
-        }else{
-          return <ListUser
+      } else {
+        return <ListUser
           listUsers={listUsers}
           navigation={navigation}
           showDepartmentName="true"
         />
-        }
       }
+    }
+  }
+  useEffect(() => {
+    if (typeQuery == 'nameus') {
+      getUsersByName(query).then((data) => {
+        setListUsers(data);
+        searchlimit();
+      });
+    }
+  }, [endget])
+  const scrollin=async ()=>{
+    setendget(endget+10);
   }
   return (
     <NativeBaseProvider>
@@ -191,16 +206,16 @@ const HomeScreen = ({ navigation }) => {
             }}
             value={query}
           />
-  </View>
-  {/*  onScroll={({nativeEvent}) => {
+        </View>
+       
+        <ScrollView  onScroll={({nativeEvent}) => {
       if (isCloseToBottom(nativeEvent)) {
-        alert('load tiếp');
+          scrollin();
       }
     }}
-    scrollEventThrottle={400} */}
-        <ScrollView>
+    scrollEventThrottle={400} >
           {searchlimit()}
- 
+
         </ScrollView>
 
         <Actionsheet isOpen={isOpen} onClose={onClose}>
@@ -213,11 +228,8 @@ const HomeScreen = ({ navigation }) => {
                   color: "gray.300",
                 }}
               >
-                Albums
+                Search name
               </Text>
-              </Box>
-            <Box w="100%" h={60} px={4} justifyContent="center">
-              <Text>Search By Name</Text>
               <Switch
                 trackColor={{ false: "#767577", true: "#81b0ff" }}
                 thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
@@ -226,13 +238,7 @@ const HomeScreen = ({ navigation }) => {
                 value={isEnabled}
               />
             </Box>
-         
-          
-            {/* <Actionsheet.Item onPress={()=>{setTypeQuery("nameus")}}>Search By Name  </Actionsheet.Item>
-            <Actionsheet.Item>Share</Actionsheet.Item>
-            <Actionsheet.Item>Play</Actionsheet.Item>
-            <Actionsheet.Item>Favourite</Actionsheet.Item>
-            <Actionsheet.Item>Cancel</Actionsheet.Item> */}
+
           </Actionsheet.Content>
         </Actionsheet>
       </View>
