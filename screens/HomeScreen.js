@@ -31,8 +31,6 @@ const HomeScreen = ({ navigation }) => {
   const [isVisible, setIsVisible] = useState(false);
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [query, setQuery] = useState("");
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   const [typeQuery, setTypeQuery] = useState("department");
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => {setIsEnabled(previousState => !previousState);
