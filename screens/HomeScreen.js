@@ -8,7 +8,12 @@ import axiosInstanceToken from "../axiosInstanceToken";
 import { AppContext } from "../context/AppProvider";
 import Department from "../component/Department";
 import ListUser from "../component/ListUser";
-
+// import AnimatedEllipsis from 'react-native-animated-ellipsis';
+// console.disableYellowBox = true; 
+import {
+  DotIndicator,
+  PacmanIndicator
+} from 'react-native-indicators';
 import {
   Button,
   Actionsheet,
@@ -24,17 +29,15 @@ const ActivityIndicatorStyled = styled.ActivityIndicator``;
 const HomeScreen = ({ navigation }) => {
   const [department, setDepartment] = useState([]);
   const [listUsers, setListUsers] = useState([]);
-  // const [listUsers, setListUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [IsLoadingAddRow, setIsLoadingAddRow] = useState(false);
+
   const { isOpen, onOpen, onClose } = useDisclose();
-  const [start, setstart] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
   const { isLogged, setIsLogged } = useContext(AppContext);
   const [query, setQuery] = useState("");
   const [typeQuery, setTypeQuery] = useState("department");
   const [isEnabled, setIsEnabled] = useState(false);
-  const [addrow, setaddrow] = useState([]);
-  const [endget, setendget] = useState(10);
+  const [endGet, setendGet] = useState(10);
 
   const toggleSwitch = () => {
     setIsEnabled(previousState => !previousState);
@@ -76,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
     try {
       let promise = await axiosInstanceToken(
         "GET",
-        `user/searchName?name=${name}&start=0&rows=${endget}`,
+        `user/searchName?name=${name}&start=0&rows=${endGet}`,
         accessToken
       );
       return promise.data;
@@ -90,7 +93,7 @@ const HomeScreen = ({ navigation }) => {
       contentSize.height - paddingToBottom;
   };
   useEffect(() => {
-    setendget(10);
+    setendGet(10);
     if (typeQuery == 'nameus') {
       setIsLoading(true);
       getUsersByName(query).then((data) => {
@@ -163,11 +166,15 @@ const HomeScreen = ({ navigation }) => {
       getUsersByName(query).then((data) => {
         setListUsers(data);
         searchlimit();
+        setIsLoadingAddRow(false);
       });
     }
-  }, [endget])
-  const scrollin=async ()=>{
-    setendget(endget+10);
+  }, [endGet])
+  const scrollin = async () => {
+    if (typeQuery == 'nameus') {
+      setIsLoadingAddRow(true);
+      setendGet(endGet + 10);
+    }
   }
   return (
     <NativeBaseProvider>
@@ -207,14 +214,15 @@ const HomeScreen = ({ navigation }) => {
             value={query}
           />
         </View>
-       
-        <ScrollView  onScroll={({nativeEvent}) => {
-      if (isCloseToBottom(nativeEvent)) {
-          scrollin();
-      }
-    }}
-    scrollEventThrottle={400} >
+        <ScrollView onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            scrollin();
+          }
+        }}
+          scrollEventThrottle={400} >
           {searchlimit()}
+          {IsLoadingAddRow ? <DotIndicator color="#2089dc" size={10} /> : <Text></Text>}
+
 
         </ScrollView>
 
