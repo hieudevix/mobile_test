@@ -65,9 +65,6 @@ export default function UserInfoDetail({ route, navigation }) {
             {checkImg ? <Image
               style={[styles.img, { transform: `rotate(${degree}deg)` }]}
               source={require('../assets/fun.gif')}
-            /> : username == "nghia" || username == 'nam' ? <Image
-              style={[styles.img, { transform: `rotate(${degree}deg)` }]}
-              source={require('../assets/fun.gif')}
             /> : <ImageZoom
               cropWidth={"100%"}
               cropHeight={450}
@@ -75,46 +72,31 @@ export default function UserInfoDetail({ route, navigation }) {
               imageHeight={450}
             >
               <Image
-                style={[styles.img, { transform: `rotate(${degree}deg)` }]}
+                style={[styles.img, {
+                  transform: [
+                    { rotateZ: `${degree}deg` }
+                  ]
+                }]}
                 source={{ uri: `data:image/jpeg;base64,${base64data}` }}
               />
             </ImageZoom>}
 
-
-
-            <Text style={styles.badge}>{userInfo?.pos}</Text>
+            <Text style={styles.badge}>{userInfo.pos}</Text>
             <View style={{ flexDirection: 'row', marginTop: 10 }}>
-
               <TouchableOpacity onPress={() => {
-                // if (degree == -360) {
-                //   setDegree(degree + 90)
-                // } else {
                 setDegree(degree - 90)
-                // }
-              }}> <Icon
+              }}><Icon
                   name='caretleft'
                   type="ant-design"
                   color='#2089dc' /></TouchableOpacity>
               <TouchableOpacity onPress={() => {
-                // if (degree == 360) {
-                //   setDegree(degree - 90)
-                // } else {
                 setDegree(degree + 90)
-                // }
-              }}> <Icon
+              }}><Icon
                   name='caretright'
                   type="ant-design"
                   color='#2089dc' /></TouchableOpacity>
             </View>
           </View>
-          {/* <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isEnabled ? "#f5dd4b" : "#f4f3f4"}
-            ios_backgroundColor="#3e3e3e"
-            onValueChange={toggleSwitch}
-            value={isEnabled}
-          /> */}
-
           <View style={styles.info}>
             <View style={styles.title}>
               <Text style={styles.titleName}>{userInfo?.name}</Text>
